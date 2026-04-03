@@ -1,0 +1,11 @@
+BlackBoard = [["Rook","Knight","Bishop","Queen","King","Bishop","Knight","Rook"], 
+              ["Pawn" for _ in range(8)], 
+              ["*" for _ in range(8)], 
+              ["*" for _ in range(8)], 
+              ["*" for _ in range(8)], 
+              ["*" for _ in range(8)]]
+                
+print(BlackBoard)
+
+row = int(input("what row would u like to move"+"\n"))
+
