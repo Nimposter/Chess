@@ -46,10 +46,19 @@ Coords2 = input("enter Coordinates of square to move to: ")
 file2 = Coordinates.get(Coords2[0])
 rank2 = Coordinates.get(Coords2[1])
 
+match Board[rank][file].lower():
+    case "r":
+        print("rook")
+    case "n":
+        print("knight")
+    case "b":
+        print("bishop")
+    case "q":
+        print("queen")
+    case "k":
+        print("king")
 Board[rank2][file2] = Board[rank][file]
 Board[rank][file] = "*"
 DisplayBoard()
-#Board[7][0] = "*"
-#Board[4][0] = "R"
-#DisplayBoard()
+
 #row = int(input("what row would u like to move"+"\n"))
