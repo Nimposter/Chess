@@ -28,20 +28,27 @@ Coordinates = {
     "7" : 1,
     "8" : 0
 }
+
 def DisplayBoard():
     for rank in range(8):
         for file in range(8):
             print(Board[rank][file], end=" ")
         print()
+
 DisplayBoard()
 
-Coords = input("enter Coordinates: ")
+Coords = input("enter Coordinates of piece to be moved: ")
 file = Coordinates.get(Coords[0])
 rank = Coordinates.get(Coords[1])
-print(file)
-print(rank)
 print(Board[rank][file])
 
+Coords2 = input("enter Coordinates of square to move to: ")
+file2 = Coordinates.get(Coords2[0])
+rank2 = Coordinates.get(Coords2[1])
+
+Board[rank2][file2] = Board[rank][file]
+Board[rank][file] = "*"
+DisplayBoard()
 #Board[7][0] = "*"
 #Board[4][0] = "R"
 #DisplayBoard()
