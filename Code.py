@@ -1,6 +1,6 @@
 ## learn about FEN
 
-
+#initializes the board to starting position via an array
 Board = [["r","n","b","q","k","b","n","r"],
         ["p" for _ in range(8)],
         ["*" for _ in range(8)],
@@ -10,6 +10,7 @@ Board = [["r","n","b","q","k","b","n","r"],
         ["P" for _ in range(8)],
         ["R","N","B","Q","K","B","N","R"]]
 
+#dictionary to convert chess coordinates to array indexes
 Coordinates = {
     "a" : 0,
     "b" : 1,
@@ -29,6 +30,7 @@ Coordinates = {
     "8" : 0
 }
 
+#defined function to print the board, uses nested loops, for ranks (rows) and files (columns)
 def DisplayBoard():
     for rank in range(8):
         for file in range(8):
