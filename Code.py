@@ -37,12 +37,55 @@ def DisplayBoard():
             print(Board[rank][file], end=" ")
         print()
 
+def RookLegalMoves(f , r):
+    Moves = []
+    tempf = f
+    tempr = r
+    while True:
+        #calculates all legal moves to right of rook
+        tempf += 1
+        if tempf > 7 or Board [tempr][tempf] != "*":
+            break
+        else:
+            Moves.append(str(tempf) + str(tempr))
+    tempf = f
+    tempr = r
+    while True:
+        #calculates all legal moves to left of rook
+        tempf -= 1
+        if tempf < 0 or Board [tempr][tempf] != "*":
+            break
+        else:
+            Moves.append(str(tempf) + str(tempr))
+    tempf = f
+    tempr = r
+    while True:
+        #calculates all legal moves below rook
+        tempr += 1
+        if tempr > 7 or Board [tempr][tempf] != "*":
+            break
+        else:
+            Moves.append(str(tempf) + str(tempr))
+    tempf = f
+    tempr = r
+    while True:
+        #calculates all legal moves above rook
+        tempr -= 1
+        if tempr < 0 or Board [tempr][tempf] != "*":
+            break
+        else:
+            Moves.append(str(tempf) + str(tempr))
+    
+    return Moves
+
 DisplayBoard()
 
 Coords = input("enter Coordinates of piece to be moved: ")
 file = Coordinates.get(Coords[0])
 rank = Coordinates.get(Coords[1])
 print(Board[rank][file])
+LegalMoves = RookLegalMoves(file , rank)
+print(LegalMoves)
 
 Coords2 = input("enter Coordinates of square to move to: ")
 file2 = Coordinates.get(Coords2[0])
