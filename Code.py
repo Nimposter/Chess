@@ -202,30 +202,13 @@ def QueenLegalMoves(f , r):
     return Moves
 
 def KnightLegalMoves(f , r):
-    print("called")
+    relative_offset = [(+2, +1) , (+2, -1) , (-2, +1),
+                      (-2, -1) , (+1, +2) , (+1, -2),
+                      (-1, +2) , (-1, -2)]
     Moves = []
-    tempf = f
-    tempr = r
-    if tempf + 2 <= 7:
-        if tempr + 1 <= 7:
-            Moves.append(str(tempf + 2) + str(tempr + 1))
-        if tempr - 1 >= 0:
-            Moves.append(str(tempf + 2) + str(tempr - 1))
-    if tempf - 2 >= 0:
-        if tempr + 1 <= 7:
-            Moves.append(str(tempf - 2) + str(tempr + 1))
-        if tempr - 1 >= 0:
-            Moves.append(str(tempf - 2) + str(tempr - 1))
-    if tempr + 2 <= 7:
-        if tempf + 1 <= 7:
-            Moves.append(str(tempf + 1) + str(tempr + 2))
-        if tempf - 1 >= 0:
-            Moves.append(str(tempf - 1) + str(tempr + 2))
-    if tempr - 2 >= 0:
-        if tempf + 1 <= 7:
-            Moves.append(str(tempf + 1) + str(tempr - 2))
-        if tempf - 1 >= 0:
-            Moves.append(str(tempf - 1) + str(tempr - 2))
+    for x , y in relative_offset:
+        if 0 <= f + x <= 7 and 0 <= r + y <= 7:
+            Moves.append(str(f + x) + str(r + y))
     return Moves
 
 def GetMoves():
@@ -258,20 +241,6 @@ def GetMoves():
 DisplayBoard()
 source_rank,source_file,target_rank,target_file = GetMoves()
 
-"""
-match Board[rank][file].lower():
-    case "r":
-        print("rook")
-    case "n":
-        print("knight")
-    case "b":
-        print("bishop")
-    case "q":
-        print("queen")
-    case "k":
-        print("king")
-
-"""
 Board[target_rank][target_file] = Board[source_rank][source_file]
 Board[source_rank][source_file] = "*"
 DisplayBoard()
