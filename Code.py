@@ -1,5 +1,9 @@
 ## learn about FEN
 
+Checkmate = False
+Stalemate = False
+WhiteMove = True
+
 #initializes the board to starting position via an array
 Board = [["r","n","b","q","k","b","n","r"],
         ["p" for _ in range(8)],
@@ -91,11 +95,12 @@ def GetMoves():
                 return source_rank,source_file,target_rank,target_file
         print("illegal move")
 
-DisplayBoard()
-source_rank,source_file,target_rank,target_file = GetMoves()
-
-Board[target_rank][target_file] = Board[source_rank][source_file]
-Board[source_rank][source_file] = "*"
+while Checkmate == Stalemate == False:
+    DisplayBoard()
+    source_rank,source_file,target_rank,target_file = GetMoves()
+    
+    Board[target_rank][target_file] = Board[source_rank][source_file]
+    Board[source_rank][source_file] = "*"
 DisplayBoard()
 
 #row = int(input("what row would u like to move"+"\n"))
