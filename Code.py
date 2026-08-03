@@ -37,168 +37,25 @@ def DisplayBoard():
             print(Board[rank][file], end=" ")
         print()
 
-def RookLegalMoves(f , r):
+def SlidingLegalMoves(f , r , piece):
+    if piece == "q":
+        directions = [(1,0) , (-1,0) , (0,1) , (0,-1) , (1, 1) , (1, -1) , (-1, 1) , (-1, -1)]
+    elif piece == "r":
+        directions = [(1,0) , (-1,0) , (0,1) , (0,-1)]
+    elif piece == "b":
+        directions = [(1, 1) , (1, -1) , (-1, 1) , (-1, -1)]
     Moves = []
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves to right of rook
-        tempf += 1
-        if tempf > 7 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves to left of rook
-        tempf -= 1
-        if tempf < 0 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves below rook
-        tempr += 1
-        if tempr > 7 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves above rook
-        tempr -= 1
-        if tempr < 0 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    return Moves
-
-def BishopLegalMoves(f , r):
-    Moves = []
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves toward bottom-right of bishop
-        tempf += 1
-        tempr += 1
-        if tempf > 7 or tempr > 7 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves towards top-left of bishop
-        tempf -= 1
-        tempr -= 1
-        if tempf < 0 or tempr < 0 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves towards bottom-left of bishop
-        tempf -= 1
-        tempr += 1
-        if tempr > 7 or tempf < 0 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves towards top-left of bishop
-        tempf += 1
-        tempr -= 1
-        if tempf > 7 or tempr < 0 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    return Moves
-
-def QueenLegalMoves(f , r):
-    Moves = []
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves to right of rook
-        tempf += 1
-        if tempf > 7 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves to left of rook
-        tempf -= 1
-        if tempf < 0 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves below rook
-        tempr += 1
-        if tempr > 7 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves above rook
-        tempr -= 1
-        if tempr < 0 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves toward bottom-right of bishop
-        tempf += 1
-        tempr += 1
-        if tempf > 7 or tempr > 7 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves towards top-left of bishop
-        tempf -= 1
-        tempr -= 1
-        if tempf < 0 or tempr < 0 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves towards bottom-left of bishop
-        tempf -= 1
-        tempr += 1
-        if tempr > 7 or tempf < 0 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
-    tempf = f
-    tempr = r
-    while True:
-        #calculates all legal moves towards top-left of bishop
-        tempf += 1
-        tempr -= 1
-        if tempf > 7 or tempr < 0 or Board [tempr][tempf] != "*":
-            break
-        else:
-            Moves.append(str(tempf) + str(tempr))
+    for x , y in directions:
+        tempf = f
+        tempr = r
+        while True:
+            #calculates all legal moves to right of rook
+            tempf += x
+            tempr += y
+            if 7 < tempf or tempf < 0 or 7 < tempr or tempr < 0 or Board [tempr][tempf] != "*":
+                break
+            else:
+                Moves.append(str(tempf) + str(tempr))
     return Moves
 
 def KnightLegalMoves(f , r):
@@ -219,12 +76,8 @@ def GetMoves():
         #print(source_file, source_rank)
         print( "you have chosen",Board[source_rank][source_file])
         match Board[source_rank][source_file].lower():
-            case "r":
-                LegalMoves = RookLegalMoves(source_file , source_rank)
-            case "b":
-                LegalMoves = BishopLegalMoves(source_file , source_rank)
-            case "q":
-                LegalMoves = QueenLegalMoves(source_file , source_rank)
+            case "q" | "b" | "r":
+                LegalMoves = SlidingLegalMoves(source_file , source_rank , Board[source_rank][source_file].lower())
             case "n":
                 LegalMoves = KnightLegalMoves(source_file , source_rank)
         print(LegalMoves)
