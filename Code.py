@@ -11,7 +11,7 @@ Board = [["r","n","b","q","k","b","n","r"],
         ["*" for _ in range(8)],
         ["*" for _ in range(8)],
         ["*" for _ in range(8)],
-        ["*" for _ in range(8)],
+        ["P" for _ in range(8)],
         ["R","N","B","Q","K","B","N","R"]]
 
 #dictionary to convert chess coordinates to array indexes
@@ -72,6 +72,22 @@ def KnightLegalMoves(f , r):
             Moves.append(str(f + x) + str(r + y))
     return Moves
 
+def PawnLegalMoves(f , r):
+    Moves = []
+    if WhiteMove:
+        Moves.append(str(f) + str(r - 1))
+        if r == 6:
+            Moves.append(str(f) + str(r - 2))
+        print(Board[r - 1][f - 1])
+        if Board[r - 1][f - 1] != "*":
+            print("blep")
+            Moves.append(str(f - 1) + str(r - 1))
+    else:
+        Moves.append(str(f) + str(r + 1))
+        if r == 1:
+            Moves.append(str(f) + str(r + 2))
+    return Moves
+
 def GetMoves():
     while True:
         Coords = input("enter Coordinates of piece to be moved: ")
@@ -84,6 +100,8 @@ def GetMoves():
                 LegalMoves = SlidingLegalMoves(source_file , source_rank , Board[source_rank][source_file].lower())
             case "n":
                 LegalMoves = KnightLegalMoves(source_file , source_rank)
+            case "p":
+                LegalMoves = PawnLegalMoves(source_file , source_rank)
         print(LegalMoves)
         
         Coords2 = input("enter Coordinates of square to move to: ")
@@ -95,12 +113,11 @@ def GetMoves():
                 return source_rank,source_file,target_rank,target_file
         print("illegal move")
 
-while Checkmate == Stalemate == False:
+while not Checkmate and not Stalemate:
     DisplayBoard()
+    print("White to move") if WhiteMove else print("Black to move")
     source_rank,source_file,target_rank,target_file = GetMoves()
     
     Board[target_rank][target_file] = Board[source_rank][source_file]
     Board[source_rank][source_file] = "*"
-DisplayBoard()
-
-#row = int(input("what row would u like to move"+"\n"))
+    WhiteMove = not WhiteMove
