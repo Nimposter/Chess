@@ -75,17 +75,29 @@ def KnightLegalMoves(f , r):
 def PawnLegalMoves(f , r):
     Moves = []
     if WhiteMove:
-        Moves.append(str(f) + str(r - 1))
-        if r == 6:
-            Moves.append(str(f) + str(r - 2))
-        print(Board[r - 1][f - 1])
-        if Board[r - 1][f - 1] != "*":
-            print("blep")
+        if Board[r - 1][f] == "*":
+            Moves.append(str(f) + str(r - 1))
+            if r == 6 and Board[r - 2][f] == "*":
+                Moves.append(str(f) + str(r - 2))
+            print(Board[r - 1][f - 1])
+        if OnBoard(f - 1 , r - 1) and Board[r - 1][f - 1] != "*":
+            print("left capture")
             Moves.append(str(f - 1) + str(r - 1))
+        if OnBoard(f + 1 , r - 1) and Board[r - 1][f + 1] != "*":
+            print("right capture")
+            Moves.append(str(f + 1) + str(r - 1))
     else:
-        Moves.append(str(f) + str(r + 1))
-        if r == 1:
-            Moves.append(str(f) + str(r + 2))
+        if Board[r + 1][f] == "*":
+            Moves.append(str(f) + str(r + 1))
+            if r == 1 and Board[r + 2][f] == "*":
+                Moves.append(str(f) + str(r + 2))
+        if OnBoard(f - 1 , r + 1) and Board[r + 1][f - 1] != "*":
+            print("left capture")
+            Moves.append(str(f - 1) + str(r + 1))
+        if OnBoard(f + 1 , r + 1) and Board[r + 1][f + 1] != "*":
+            print("right capture")
+            Moves.append(str(f + 1) + str(r + 1))
+        
     return Moves
 
 def GetMoves():
@@ -112,6 +124,9 @@ def GetMoves():
                 #print("Legal Move")
                 return source_rank,source_file,target_rank,target_file
         print("illegal move")
+
+def OnBoard(f , r):
+    return 0 <= f <= 7 and 0 <= r <= 7
 
 while not Checkmate and not Stalemate:
     DisplayBoard()
