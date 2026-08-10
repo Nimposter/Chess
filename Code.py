@@ -41,6 +41,19 @@ def DisplayBoard():
             print(Board[rank][file], end=" ")
         print()
 
+def KingLegalMoves(f , r):
+    relative_offset = [(+1, +1) , (+1, 0) , (+1, -1),
+                       (0, +1) ,            (0, -1),
+                       (-1, +1) , (-1, 0) , (-1, -1)]
+    Moves = []
+    print("king called")
+    for x , y in relative_offset:
+        if OnBoard(f + x , r + y) and not IsAttacked(f + x , r + y):
+            if Board[r + y][f + x] == "*" or IsEnemy(f + x , r + y):
+                Moves.append(str(f + x) + str(r + y))
+    
+    return Moves
+
 def SlidingLegalMoves(f , r , piece):
     if piece == "q":
         directions = [(1,0) , (-1,0) , (0,1) , (0,-1) , (1, 1) , (1, -1) , (-1, 1) , (-1, -1)]
@@ -71,7 +84,7 @@ def KnightLegalMoves(f , r):
                       (-1, +2) , (-1, -2)]
     Moves = []
     for x , y in relative_offset:
-        if OnBoard(f + x, r + y):
+        if OnBoard(f + x , r + y):
             if Board[r + y][f + x] == "*":
                 Moves.append(str(f + x) + str(r + y))
             elif IsEnemy(f + x, r + y):
@@ -128,6 +141,8 @@ def GetMoves():
         
         #determines what piece has been selected and calls the respective move generation function
         match Board[source_rank][source_file].lower():
+                case "k":
+                    LegalMoves = KingLegalMoves(source_file , source_rank)
                 case "q" | "b" | "r":
                     LegalMoves = SlidingLegalMoves(source_file , source_rank , Board[source_rank][source_file].lower())
                 case "n":
@@ -158,6 +173,9 @@ def IsEnemy(f , r):
         return not WhiteMove
     else:
         return WhiteMove
+
+def IsAttacked(f , r):
+    return False
 
 while not Checkmate and not Stalemate:
     DisplayBoard()
