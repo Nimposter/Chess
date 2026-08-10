@@ -6,12 +6,12 @@ WhiteMove = True
 
 #initializes the board to starting position via an array
 Board = [["r","n","b","q","k","b","n","r"],
-        ["p" for _ in range(8)],
         ["*" for _ in range(8)],
         ["*" for _ in range(8)],
         ["*" for _ in range(8)],
         ["*" for _ in range(8)],
-        ["P" for _ in range(8)],
+        ["*" for _ in range(8)],
+        ["*" for _ in range(8)],
         ["R","N","B","Q","K","B","N","R"]]
 
 #dictionary to convert chess coordinates to array indexes
@@ -46,7 +46,6 @@ def KingLegalMoves(f , r):
                        (0, +1) ,            (0, -1),
                        (-1, +1) , (-1, 0) , (-1, -1)]
     Moves = []
-    print("king called")
     for x , y in relative_offset:
         if OnBoard(f + x , r + y) and not IsAttacked(f + x , r + y):
             if Board[r + y][f + x] == "*" or IsEnemy(f + x , r + y):
@@ -175,6 +174,47 @@ def IsEnemy(f , r):
         return WhiteMove
 
 def IsAttacked(f , r):
+    King = [(+1, +1) , (+1, 0) , (+1, -1), (0, +1) , (0, -1), (-1, +1) , (-1, 0) , (-1, -1)]
+    Rook = [(1,0) , (-1,0) , (0,1) , (0,-1)]
+    Bishop = [(1, 1) , (1, -1) , (-1, 1) , (-1, -1)]
+    Knight = [(+2, +1) , (+2, -1) , (-2, +1), (-2, -1) , (+1, +2) , (+1, -2), (-1, +2) , (-1, -2)]
+    
+    for x , y in Rook:
+        tempf = f
+        tempr = r
+        while True:
+            tempf += x
+            tempr += y
+            if not OnBoard(tempf, tempr):
+                break
+            elif Board [tempr][tempf] != "*":
+                if Board [tempr][tempf].lower() in  ("r" , "q"):
+                    if IsEnemy(tempf , tempr):
+                        return True
+                break
+    
+    for x , y in Bishop:
+        tempf = f
+        tempr = r
+        while True:
+            tempf += x
+            tempr += y
+            if not OnBoard(tempf, tempr):
+                break
+            elif Board [tempr][tempf] != "*":
+                if Board [tempr][tempf].lower() in  ("b" , "q"):
+                    if IsEnemy(tempf , tempr):
+                        return True
+                break
+    
+    for x , y in Knight:
+        if OnBoard(f + x , r + y):
+            if Board[r + y][f + x].lower() == "n" and IsEnemy(f + x, r + y):
+                return True
+    
+    for x , y in King:
+        if OnBoard(f + x , r + y) and Board[r + y][f + x].lower() == "k" and IsEnemy(f + x , r + y):
+            return True
     return False
 
 while not Checkmate and not Stalemate:
