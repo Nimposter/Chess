@@ -215,6 +215,17 @@ def IsAttacked(f , r):
     for x , y in King:
         if OnBoard(f + x , r + y) and Board[r + y][f + x].lower() == "k" and IsEnemy(f + x , r + y):
             return True
+    
+    if WhiteMove:
+        if OnBoard(f - 1 , r - 1) and Board[r - 1][f - 1].lower() == "p" and IsEnemy(f - 1 , r - 1):
+            return True
+        if OnBoard(f + 1 , r - 1) and Board[r - 1][f + 1].lower() == "p" and IsEnemy(f + 1 , r - 1):
+            return True
+    else:
+        if OnBoard(f - 1 , r + 1) and Board[r + 1][f - 1].lower() == "p" and IsEnemy(f - 1 , r + 1):
+            return True
+        if OnBoard(f + 1 , r + 1) and Board[r + 1][f + 1].lower() == "p" and IsEnemy(f + 1 , r + 1):
+            return True
     return False
 
 while not Checkmate and not Stalemate:
