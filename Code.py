@@ -159,9 +159,10 @@ def GetMoves():
         #checks whether move user has entered is a legal move or not
         for i in LegalMoves:
             if i == str(target_file) + str(target_rank):
-                #print("Legal Move")
-                #if entered move is legal, it returns to the main program
-                return source_rank,source_file,target_rank,target_file
+                if FilterLegalMoves():  
+                    #print("Legal Move")
+                    #if entered move is legal, it returns to the main program
+                    return source_rank,source_file,target_rank,target_file
         print("illegal move")
 
 def OnBoard(f , r):
@@ -228,6 +229,35 @@ def IsAttacked(f , r):
             return True
     return False
 
+def FilterLegalMoves(sourcef , sourcer , targetf , targetr):
+    temp1 = Board[sourcer][sourcef]
+    temp2 = Board[targetr][targetf]
+    
+    Board[targetr][targetf] = Board[sourcer][sourcef]
+    
+    kingf, kingr = FindKing()
+    print("the king is " + Board[kingr][kingf])
+    if IsAttacked(kingf , kingr):
+        flag = False
+    else:
+        flag = True
+    
+    Board[sourcer][sourcef] = temp1
+    Board[targetr][targetf] = temp2
+    
+    return flag
+    
+    
+def FindKing():
+    for rank in range(8):
+        for file in range(8):
+            if WhiteMove:
+                if Board[rank][file] == "K":
+                    return file , rank
+            else:
+                if Board[rank][file] == "k":
+                    return file , rank
+
 while not Checkmate and not Stalemate:
     DisplayBoard()
     print("White to move") if WhiteMove else print("Black to move")
@@ -236,3 +266,4 @@ while not Checkmate and not Stalemate:
     Board[target_rank][target_file] = Board[source_rank][source_file]
     Board[source_rank][source_file] = "*"
     WhiteMove = not WhiteMove
+    
