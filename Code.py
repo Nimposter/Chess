@@ -159,7 +159,7 @@ def GetMoves():
         #checks whether move user has entered is a legal move or not
         for i in LegalMoves:
             if i == str(target_file) + str(target_rank):
-                if FilterLegalMoves():  
+                if FilterLegalMoves(source_file , source_rank , target_file , target_rank):
                     #print("Legal Move")
                     #if entered move is legal, it returns to the main program
                     return source_rank,source_file,target_rank,target_file
@@ -229,11 +229,13 @@ def IsAttacked(f , r):
             return True
     return False
 
+#filters out move that leave the king in check
 def FilterLegalMoves(sourcef , sourcer , targetf , targetr):
     temp1 = Board[sourcer][sourcef]
     temp2 = Board[targetr][targetf]
     
     Board[targetr][targetf] = Board[sourcer][sourcef]
+    Board[sourcer][sourcef] = "*"
     
     kingf, kingr = FindKing()
     print("the king is " + Board[kingr][kingf])
@@ -246,8 +248,9 @@ def FilterLegalMoves(sourcef , sourcer , targetf , targetr):
     Board[targetr][targetf] = temp2
     
     return flag
-    
-    
+
+
+#Returns the array indexes of your king
 def FindKing():
     for rank in range(8):
         for file in range(8):
