@@ -150,6 +150,8 @@ def GetMoves():
                     LegalMoves = PawnLegalMoves(source_file , source_rank)
         
         print(LegalMoves)
+        LegalMoves = FilterLegalMoves(source_file , source_rank , LegalMoves)
+        
         
         #gets input from user of square to move to
         Coords2 = input("enter Coordinates of square to move to: ")
@@ -159,7 +161,6 @@ def GetMoves():
         #checks whether move user has entered is a legal move or not
         for i in LegalMoves:
             if i == str(target_file) + str(target_rank):
-                if FilterLegalMoves(source_file , source_rank , target_file , target_rank):
                     #print("Legal Move")
                     #if entered move is legal, it returns to the main program
                     return source_rank,source_file,target_rank,target_file
@@ -230,24 +231,28 @@ def IsAttacked(f , r):
     return False
 
 #filters out move that leave the king in check
-def FilterLegalMoves(sourcef , sourcer , targetf , targetr):
-    temp1 = Board[sourcer][sourcef]
-    temp2 = Board[targetr][targetf]
+def FilterLegalMoves(sourcef , sourcer , Moves):
     
-    Board[targetr][targetf] = Board[sourcer][sourcef]
-    Board[sourcer][sourcef] = "*"
+    FilteredMoves = []
     
-    kingf, kingr = FindKing()
-    print("the king is " + Board[kingr][kingf])
-    if IsAttacked(kingf , kingr):
-        flag = False
-    else:
-        flag = True
-    
-    Board[sourcer][sourcef] = temp1
-    Board[targetr][targetf] = temp2
-    
-    return flag
+    for i in Moves:
+        targetf = int(i[0])
+        targetr = int(i[1])
+        temp1 = Board[sourcer][sourcef]
+        temp2 = Board[targetr][targetf]
+        
+        Board[targetr][targetf] = Board[sourcer][sourcef]
+        Board[sourcer][sourcef] = "*"
+        
+        kingf, kingr = FindKing()
+
+        if not IsAttacked(kingf , kingr):
+            FilteredMoves.append(i)
+        
+        Board[sourcer][sourcef] = temp1
+        Board[targetr][targetf] = temp2
+        
+    return FilteredMoves
 
 
 #Returns the array indexes of your king
@@ -268,5 +273,6 @@ while not Checkmate and not Stalemate:
     
     Board[target_rank][target_file] = Board[source_rank][source_file]
     Board[source_rank][source_file] = "*"
-    WhiteMove = not WhiteMove
     
+    
+    WhiteMove = not WhiteMove
