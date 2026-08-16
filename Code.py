@@ -12,7 +12,7 @@ Board = [["r","n","b","q","k","b","n","r"],
         ["*" for _ in range(8)],
         ["*" for _ in range(8)],
         ["*" for _ in range(8)],
-        ["R","N","B","Q","K","B","N","R"]]
+        ["*","*","*","*","K","*","*","*"]]
 
 #dictionary to convert chess coordinates to array indexes
 Coordinates = {
@@ -36,9 +36,9 @@ Coordinates = {
 
 #defined function to print the board, uses nested loops, for ranks (rows) and files (columns)
 def DisplayBoard():
-    for rank in range(8):
-        for file in range(8):
-            print(Board[rank][file], end=" ")
+    for rank in Board:
+        for piece in rank:
+            print(piece, end=" ")
         print()
 
 def KingLegalMoves(f , r):
@@ -266,6 +266,33 @@ def FindKing():
                 if Board[rank][file] == "k":
                     return file , rank
 
+def CheckGameState():
+    global Checkmate , Stalemate
+    for rank in range(8):
+        for file in range(8):
+            if Board[rank][file] != "*" and not IsEnemy(file , rank):
+                print("bleh")
+                match Board[rank][file].lower():
+                    case "k":
+                        LegalMoves = KingLegalMoves(file , rank)
+                    case "q" | "b" | "r":
+                        LegalMoves = SlidingLegalMoves(file , rank , Board[rank][file].lower())
+                    case "n":
+                        LegalMoves = KnightLegalMoves(file , rank)
+                    case "p":
+                        LegalMoves = PawnLegalMoves(file , rank)
+        
+                print(LegalMoves)
+                LegalMoves = FilterLegalMoves(file , rank , LegalMoves)
+                
+                if LegalMoves:
+                    return
+    kingf , kingr = FindKing()
+    if IsAttacked(kingf , kingr):
+        Checkmate = True
+    else:
+        Stalemate = True
+
 while not Checkmate and not Stalemate:
     DisplayBoard()
     print("White to move") if WhiteMove else print("Black to move")
@@ -276,3 +303,5 @@ while not Checkmate and not Stalemate:
     
     
     WhiteMove = not WhiteMove
+
+    CheckGameState()
