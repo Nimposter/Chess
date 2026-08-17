@@ -6,13 +6,13 @@ WhiteMove = True
 
 #initializes the board to starting position via an array
 Board = [["r","n","b","q","k","b","n","r"],
+        ["p" for _ in range(8)],
         ["*" for _ in range(8)],
         ["*" for _ in range(8)],
         ["*" for _ in range(8)],
         ["*" for _ in range(8)],
-        ["*" for _ in range(8)],
-        ["*" for _ in range(8)],
-        ["*","*","*","*","K","*","*","*"]]
+        ["P" for _ in range(8)],
+        ["R","N","B","Q","K","B","N","R"]]
 
 #dictionary to convert chess coordinates to array indexes
 Coordinates = {
@@ -254,6 +254,33 @@ def FilterLegalMoves(sourcef , sourcer , Moves):
         
     return FilteredMoves
 
+def FEN():
+    FenString = ""
+    for rank in Board:
+        for piece in rank:
+            if piece != "*":
+                FenString = FenString + piece
+                #print(FenString)
+            else:
+                try:
+                    num = int(FenString[-1])
+                    num += 1
+                    #FenString = FenString[:len(FenString) - 1]
+                    FenString = FenString[:-1] + str(num)
+                except ValueError:
+                    FenString = FenString + "1"
+                '''if isinstance(FenString[-1] , int):
+                    FenString[-1] + 1
+                    print("int")'''
+            #print(piece, end=" ")
+        FenString = FenString + "/"
+    FenString = FenString[:-1] + " "
+    if WhiteMove:
+        FenString += "w"
+    else:
+        FenString += "b"
+    print(FenString)
+
 
 #Returns the array indexes of your king
 def FindKing():
@@ -295,6 +322,7 @@ def CheckGameState():
 
 while not Checkmate and not Stalemate:
     DisplayBoard()
+    FEN()
     print("White to move") if WhiteMove else print("Black to move")
     source_rank,source_file,target_rank,target_file = GetMoves()
     
