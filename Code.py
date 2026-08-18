@@ -1,8 +1,9 @@
 ## learn about FEN
 
+WhiteMove = True
 Checkmate = False
 Stalemate = False
-WhiteMove = True
+CastlingRights = "KQkq"
 
 #initializes the board to starting position via an array
 Board = [["r","n","b","q","k","b","n","r"],
@@ -326,6 +327,23 @@ while not Checkmate and not Stalemate:
     print("White to move") if WhiteMove else print("Black to move")
     source_rank,source_file,target_rank,target_file = GetMoves()
     
+    
+    match Board[source_rank][source_file]:
+        case "K":
+            CastlingRights = CastlingRights.replace("K" , "").replace("Q" , "")
+        case "k":
+            CastlingRights = CastlingRights.replace("k" , "").replace("q" , "")
+        case "R":
+            if source_file == 0:
+                CastlingRights = CastlingRights.replace("Q" , "")
+            elif source_file == 7:
+                CastlingRights = CastlingRights.replace("K" , "")
+        case "r":
+            if source_file == 0:
+                CastlingRights = CastlingRights.replace("q" , "")
+            elif source_file == 7:
+                CastlingRights = CastlingRights.replace("k" , "")
+
     Board[target_rank][target_file] = Board[source_rank][source_file]
     Board[source_rank][source_file] = "*"
     
