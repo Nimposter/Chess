@@ -52,6 +52,19 @@ def KingLegalMoves(f , r):
             if Board[r + y][f + x] == "*" or IsEnemy(f + x , r + y):
                 Moves.append(str(f + x) + str(r + y))
     
+    if WhiteMove:
+        if CanCastle("K"):
+            Moves.append(str(f + 2) + str(r))
+        if CanCastle("Q"):
+            Moves.append(str(f - 2) + str(r))
+    else:
+        if CanCastle("k"):
+            Moves.append(str(f + 2) + str(r))
+        
+        if CanCastle("q"):
+            Moves.append(str(f - 2) + str(r))
+
+
     return Moves
 
 def SlidingLegalMoves(f , r , piece):
@@ -233,6 +246,7 @@ def IsAttacked(f , r):
 
 #filters out move that leave the king in check
 def FilterLegalMoves(sourcef , sourcer , Moves):
+    kingf , kingr = FindKing()
     
     FilteredMoves = []
     
@@ -246,13 +260,12 @@ def FilterLegalMoves(sourcef , sourcer , Moves):
         Board[sourcer][sourcef] = "*"
         
         kingf, kingr = FindKing()
-
+    
         if not IsAttacked(kingf , kingr):
             FilteredMoves.append(i)
         
         Board[sourcer][sourcef] = temp1
         Board[targetr][targetf] = temp2
-        
     return FilteredMoves
 
 def FEN():
@@ -275,13 +288,45 @@ def FEN():
                     print("int")'''
             #print(piece, end=" ")
         FenString = FenString + "/"
-    FenString = FenString[:-1] + " "
+    FenString = FenString[:-1]
     if WhiteMove:
-        FenString += "w"
+        FenString += " w "
     else:
-        FenString += "b"
+        FenString += " b "
+    
+    FenString += CastlingRights
     print(FenString)
 
+def CanCastle(side):
+    kingf , kingr = FindKing()
+    if IsAttacked(kingf , kingr):
+        return False
+    
+    match side:
+        case "K":
+            if "K" in CastlingRights:
+                if Board[kingr][kingf + 1] == Board[kingr][kingf + 2] == "*":
+                    if not IsAttacked(kingf + 1 , kingr) and not IsAttacked(kingf + 2 , kingr):
+                            return True
+        
+        case "k":
+            if "k" in CastlingRights:
+                if Board[kingr][kingf + 1] == Board[kingr][kingf + 2] == "*":
+                    if not IsAttacked(kingf + 1 , kingr) and not IsAttacked(kingf + 2 , kingr):
+                            return True
+        case "Q":
+            if "Q" in CastlingRights:
+                if Board[kingr][kingf - 1] == Board[kingr][kingf - 2] == Board[kingr][kingf - 3] == "*":
+                    if not IsAttacked(kingf - 1 , kingr) and not IsAttacked(kingf - 2 , kingr):
+                            return True
+                            
+                            
+        case "q":
+            if "q" in CastlingRights:
+                if Board[kingr][kingf - 1] == Board[kingr][kingf - 2] == Board[kingr][kingf - 3] == "*":
+                    if not IsAttacked(kingf - 1 , kingr) and not IsAttacked(kingf - 2 , kingr):
+                            return True
+    return False
 
 #Returns the array indexes of your king
 def FindKing():
@@ -334,19 +379,39 @@ while not Checkmate and not Stalemate:
         case "k":
             CastlingRights = CastlingRights.replace("k" , "").replace("q" , "")
         case "R":
-            if source_file == 0:
+            if source_file == 0 and source_rank == 7:
                 CastlingRights = CastlingRights.replace("Q" , "")
-            elif source_file == 7:
+            elif source_file == 7 and source_rank == 7:
                 CastlingRights = CastlingRights.replace("K" , "")
         case "r":
-            if source_file == 0:
+            if source_file == 0 and source_rank == 0:
                 CastlingRights = CastlingRights.replace("q" , "")
-            elif source_file == 7:
+            elif source_file == 7 and source_rank == 0:
                 CastlingRights = CastlingRights.replace("k" , "")
 
+    match Board[target_rank][target_file]:
+        case "R":
+            if target_file == 0 and target_rank == 7:
+                CastlingRights = CastlingRights.replace("Q" , "")
+            elif target_file == 7 and target_rank == 7:
+                CastlingRights = CastlingRights.replace("K" , "")
+        case "r":
+            if target_file == 0 and target_rank == 0:
+                CastlingRights = CastlingRights.replace("q" , "")
+            elif target_file == 7 and target_rank == 0:
+                CastlingRights = CastlingRights.replace("k" , "")
+
+    
+    
+    if abs(target_file - source_file) == 2 and Board[source_rank][source_file].lower() == "k":
+        if target_file == 6:
+            Board[target_rank][target_file - 1] = Board[source_rank][7]
+            Board[source_rank][7] = "*"
+        elif target_file == 2:
+            Board[target_rank][target_file + 1] = Board[source_rank][0]
+            Board[source_rank][0] = "*"
     Board[target_rank][target_file] = Board[source_rank][source_file]
     Board[source_rank][source_file] = "*"
-    
     
     WhiteMove = not WhiteMove
 
