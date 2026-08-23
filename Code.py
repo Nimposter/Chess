@@ -4,6 +4,7 @@ WhiteMove = True
 Checkmate = False
 Stalemate = False
 CastlingRights = "KQkq"
+EnPassantTarget = "-"
 
 #initializes the board to starting position via an array
 Board = [["r","n","b","q","k","b","n","r"],
@@ -34,6 +35,10 @@ Coordinates = {
     "7" : 1,
     "8" : 0
 }
+
+#strings to convert array indexes to chess coordinates (string splicing)
+Files = "abcdefgh"
+Ranks = "87654321"
 
 #defined function to print the board, uses nested loops, for ranks (rows) and files (columns)
 def DisplayBoard():
@@ -295,6 +300,11 @@ def FEN():
         FenString += " b "
     
     FenString += CastlingRights
+    
+    if EnPassantTarget == "-":
+        FenString += " -"
+    else:
+        FenString += " " + (Files[int(EnPassantTarget[0])]) + (Ranks[int(EnPassantTarget[1])])
     print(FenString)
 
 def CanCastle(side):
@@ -403,6 +413,10 @@ while not Checkmate and not Stalemate:
 
     
     
+    if abs(target_rank - source_rank) == 2 and Board[source_rank][source_file].lower() == "p":
+        EnPassantTarget = str(source_file) + str((source_rank + target_rank) // 2)
+    elif EnPassantTarget != "-":
+        EnPassantTarget = "-"
     if abs(target_file - source_file) == 2 and Board[source_rank][source_file].lower() == "k":
         if target_file == 6:
             Board[target_rank][target_file - 1] = Board[source_rank][7]
