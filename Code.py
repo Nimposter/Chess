@@ -122,6 +122,10 @@ def PawnLegalMoves(f , r):
         if OnBoard(f + 1 , r - 1) and Board[r - 1][f + 1] != "*" and IsEnemy(f + 1 , r - 1):
             print("right capture")
             Moves.append(str(f + 1) + str(r - 1))
+        
+        if (str(f - 1) + str(r - 1)) == EnPassantTarget or (str(f + 1) + str(r - 1)) == EnPassantTarget:
+            print("En Passant")
+            Moves.append(EnPassantTarget)
     else:
         if Board[r + 1][f] == "*":
             Moves.append(str(f) + str(r + 1))
@@ -133,6 +137,10 @@ def PawnLegalMoves(f , r):
         if OnBoard(f + 1 , r + 1) and Board[r + 1][f + 1] != "*" and IsEnemy(f + 1 , r + 1):
             print("right capture")
             Moves.append(str(f + 1) + str(r + 1))
+        
+        if (str(f - 1) + str(r + 1)) == EnPassantTarget or (str(f + 1) + str(r + 1)) == EnPassantTarget:
+            print("En Passant")
+            Moves.append(EnPassantTarget)
         
     return Moves
 
@@ -413,6 +421,13 @@ while not Checkmate and not Stalemate:
 
     
     
+    if (str(target_file) + str(target_rank)) == EnPassantTarget:
+        if WhiteMove:
+            print("enpassant executed")
+            Board[target_rank + 1][target_file] = "*"
+        else:
+            print("enpassant executed")
+            Board[target_rank - 1][target_file] = "*"
     if abs(target_rank - source_rank) == 2 and Board[source_rank][source_file].lower() == "p":
         EnPassantTarget = str(source_file) + str((source_rank + target_rank) // 2)
     elif EnPassantTarget != "-":
@@ -424,6 +439,11 @@ while not Checkmate and not Stalemate:
         elif target_file == 2:
             Board[target_rank][target_file + 1] = Board[source_rank][0]
             Board[source_rank][0] = "*"
+    
+     
+    print(EnPassantTarget)
+    print(type(EnPassantTarget))
+        
     Board[target_rank][target_file] = Board[source_rank][source_file]
     Board[source_rank][source_file] = "*"
     
