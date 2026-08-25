@@ -1,4 +1,4 @@
-## learn about FEN
+## FEN gives error if first square of board is empty (a8) (line 293)
 
 WhiteMove = True
 Checkmate = False
@@ -7,8 +7,8 @@ CastlingRights = "KQkq"
 EnPassantTarget = "-"
 
 #initializes the board to starting position via an array
-Board = [["r","n","b","q","k","b","n","r"],
-        ["p" for _ in range(8)],
+Board = [["r","n","b","q","k","b","n","*"],
+        ["*" for _ in range(8)],
         ["*" for _ in range(8)],
         ["*" for _ in range(8)],
         ["*" for _ in range(8)],
@@ -447,6 +447,27 @@ while not Checkmate and not Stalemate:
     Board[target_rank][target_file] = Board[source_rank][source_file]
     Board[source_rank][source_file] = "*"
     
+    if target_rank == 0 and Board[target_rank][target_file] == "P":
+        match input("promote to: ").lower():
+            case "q":
+                Board[target_rank][target_file] = "Q"
+            case "r":
+                Board[target_rank][target_file] = "R"
+            case "b":
+                Board[target_rank][target_file] = "B"
+            case "n":
+                Board[target_rank][target_file] = "N"
+    elif target_rank == 7 and Board[target_rank][target_file] == "p":
+        match input("promote to: ").lower():
+            case "q":
+                Board[target_rank][target_file] = "q"
+            case "r":
+                Board[target_rank][target_file] = "r"
+            case "b":
+                Board[target_rank][target_file] = "b"
+            case "n":
+                Board[target_rank][target_file] = "n"
+        
     WhiteMove = not WhiteMove
 
     CheckGameState()
