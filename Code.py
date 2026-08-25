@@ -5,6 +5,8 @@ Checkmate = False
 Stalemate = False
 CastlingRights = "KQkq"
 EnPassantTarget = "-"
+HalfMoves = 0
+FullMove = 1
 
 #initializes the board to starting position via an array
 Board = [["r","n","b","q","k","b","n","*"],
@@ -384,7 +386,7 @@ def CheckGameState():
     else:
         Stalemate = True
 
-while not Checkmate and not Stalemate:
+while not Checkmate and not Stalemate and HalfMoves < 100:
     DisplayBoard()
     FEN()
     print("White to move") if WhiteMove else print("Black to move")
@@ -419,6 +421,11 @@ while not Checkmate and not Stalemate:
             elif target_file == 7 and target_rank == 0:
                 CastlingRights = CastlingRights.replace("k" , "")
 
+    
+    if Board[source_rank][source_file].lower() == "p" or Board[target_rank][target_file] != "*":
+        HalfMoves = 0
+    else:
+        HalfMoves += 1
     
     
     if (str(target_file) + str(target_rank)) == EnPassantTarget:
@@ -468,6 +475,11 @@ while not Checkmate and not Stalemate:
             case "n":
                 Board[target_rank][target_file] = "n"
         
+
+    if not WhiteMove:
+        FullMove += 1
+    
+    
     WhiteMove = not WhiteMove
 
     CheckGameState()
