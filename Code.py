@@ -1,4 +1,5 @@
-## FEN gives error if first square of board is empty (a8) (line 293)
+## learn about PGN
+## learn about GUI
 
 WhiteMove = True
 Checkmate = False
@@ -178,7 +179,6 @@ def GetMoves():
                 case "p":
                     LegalMoves = PawnLegalMoves(source_file , source_rank)
         
-        print(LegalMoves)
         LegalMoves = FilterLegalMoves(source_file , source_rank , LegalMoves)
         
         
@@ -261,7 +261,6 @@ def IsAttacked(f , r):
 
 #filters out move that leave the king in check
 def FilterLegalMoves(sourcef , sourcer , Moves):
-    kingf , kingr = FindKing()
     
     FilteredMoves = []
     
@@ -271,6 +270,12 @@ def FilterLegalMoves(sourcef , sourcer , Moves):
         temp1 = Board[sourcer][sourcef]
         temp2 = Board[targetr][targetf]
         
+        if (str(targetf) + str(targetr)) == EnPassantTarget and Board[targetr][targetf].lower() == "p":
+            if WhiteMove:
+                Board[targetr + 1][targetf] = "*"
+            else:
+                Board[targetr - 1][targetf] = "*"
+        
         Board[targetr][targetf] = Board[sourcer][sourcef]
         Board[sourcer][sourcef] = "*"
         
@@ -278,6 +283,12 @@ def FilterLegalMoves(sourcef , sourcer , Moves):
     
         if not IsAttacked(kingf , kingr):
             FilteredMoves.append(i)
+        
+        if (str(targetf) + str(targetr)) == EnPassantTarget and Board[targetr][targetf].lower() == "p":
+            if WhiteMove:
+                Board[targetr + 1][targetf] = "p"
+            else:
+                Board[targetr - 1][targetf] = "P"
         
         Board[sourcer][sourcef] = temp1
         Board[targetr][targetf] = temp2
@@ -431,12 +442,10 @@ while not Checkmate and not Stalemate and HalfMoves < 100:
         HalfMoves += 1
     
     
-    if (str(target_file) + str(target_rank)) == EnPassantTarget:
+    if (str(target_file) + str(target_rank)) == EnPassantTarget and Board[source_rank][source_file].lower() == "p":
         if WhiteMove:
-            print("enpassant executed")
             Board[target_rank + 1][target_file] = "*"
         else:
-            print("enpassant executed")
             Board[target_rank - 1][target_file] = "*"
     if abs(target_rank - source_rank) == 2 and Board[source_rank][source_file].lower() == "p":
         EnPassantTarget = str(source_file) + str((source_rank + target_rank) // 2)
@@ -486,3 +495,5 @@ while not Checkmate and not Stalemate and HalfMoves < 100:
     WhiteMove = not WhiteMove
 
     CheckGameState()
+    
+    print("\033[2J\033[H" , end = "")
