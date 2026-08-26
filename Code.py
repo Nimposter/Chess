@@ -6,7 +6,7 @@ Stalemate = False
 CastlingRights = "KQkq"
 EnPassantTarget = "-"
 HalfMoves = 0
-FullMove = 1
+FullMoves = 1
 
 #initializes the board to starting position via an array
 Board = [["r","n","b","q","k","b","n","*"],
@@ -296,7 +296,7 @@ def FEN():
                     num += 1
                     #FenString = FenString[:len(FenString) - 1]
                     FenString = FenString[:-1] + str(num)
-                except ValueError:
+                except (ValueError , IndexError):
                     FenString = FenString + "1"
                 '''if isinstance(FenString[-1] , int):
                     FenString[-1] + 1
@@ -315,6 +315,9 @@ def FEN():
         FenString += " -"
     else:
         FenString += " " + (Files[int(EnPassantTarget[0])]) + (Ranks[int(EnPassantTarget[1])])
+    
+    FenString += " " + str(HalfMoves) + " " + str(FullMoves)
+    
     print(FenString)
 
 def CanCastle(side):
@@ -477,7 +480,7 @@ while not Checkmate and not Stalemate and HalfMoves < 100:
         
 
     if not WhiteMove:
-        FullMove += 1
+        FullMoves += 1
     
     
     WhiteMove = not WhiteMove
